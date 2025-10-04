@@ -7,6 +7,6 @@ const PORT = process.env.PORT || 3000;
   const app = await createApp()
   if(!app) return
   app.listen(PORT, () => {
-    console.log(`yea PORT:${PORT}`)
+    console.log(`listening on PORT:${PORT}`)
   })
 })()
