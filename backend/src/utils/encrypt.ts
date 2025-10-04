@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt"
 
-const SALT = process.env.SALT as Number
+const SALT = Number(process.env.SALT) || 10
 
 export const hashPassword = async(password: string): Promise<string | null> => {
   try {
@@ -13,7 +13,7 @@ export const hashPassword = async(password: string): Promise<string | null> => {
 
 export const comparePassword = async(password: string, hash: string): Promise<boolean> => {
 try {
-  const compared = await bcrypt.compare(password, hash)
+  const compared = await bcrypt.compare(password, hash);
   return compared
 } catch (e) {
   return false
