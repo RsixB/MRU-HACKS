@@ -12,7 +12,6 @@ export const verifyToken = (token) => {
         return authenticated.id;
     }
     catch (e) {
-        console.error("HERE");
         return null;
     }
 };

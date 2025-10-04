@@ -12,10 +12,10 @@ export const verifyToken = (token: string): string | null=> {
   try {
     const authenticated = jwt.verify(token, SECRET) as UserPayload
 
-    if(!authenticated)throw new Error();
+    if(!authenticated)throw new Error()
+
     return authenticated.id
   } catch (e) {
-    console.error("HERE")
     return null
   }
 }

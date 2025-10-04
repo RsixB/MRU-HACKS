@@ -7,25 +7,27 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import expess from "express";
-import bodyParser from "body-parser";
-import cors from "cors";
-import { connectMongo } from "./database/connect-mongo.js";
-import authRoutes from "./routes/auth-routes.js";
-import generalRoutes from "./routes/general-routes.js";
-export const createApp = () => __awaiter(void 0, void 0, void 0, function* () {
+import { v2 as cloudinary } from 'cloudinary';
+cloudinary.config({
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+    cloud_name: process.env.CLOUDINARY_NAME,
+});
+export const uploadImage = (image) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const connected = yield connectMongo();
-        if (!connected)
+        const uploaded = yield cloudinary.uploader.upload(image, {
+            folder: "chess-images",
+            transformation: [
+                { width: 150, height: 150, crop: "fill", gravity: "auto" },
+                { quality: "auto:good" },
+            ],
+        });
+        if (!uploaded.secure_url || !uploaded.public_id)
             throw new Error();
-        const app = expess();
-        app.use(bodyParser.json());
-        app.use(cors());
-        //routes
-        app.use("/api", authRoutes);
-        app.use("/api", generalRoutes);
-        //gotta add ai api route
-        return app;
+        return {
+            url: uploaded.secure_url,
+            publicID: uploaded.public_id
+        };
     }
     catch (e) {
         return null;
