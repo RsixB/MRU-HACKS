@@ -5,8 +5,6 @@ import cors from "cors";
 import { connectMongo } from "./database/connect-mongo.ts";
 import authRoutes from "./routes/auth-routes.ts"
 import generalRoutes from "./routes/general-routes.ts"
-
-
 export const createApp = async (): Promise<Application | null> => {
   try {
 
@@ -16,12 +14,8 @@ export const createApp = async (): Promise<Application | null> => {
 
     app.use(bodyParser.json())
     app.use(cors())
-
-
-    //routes
     app.use("/api", authRoutes)
     app.use("/api", generalRoutes)
-    //gotta add ai api route
     return app
   } catch (e) {
     return null

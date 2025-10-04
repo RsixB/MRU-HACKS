@@ -16,7 +16,6 @@ export interface MessageType {
   createdAt: Date;
   updatedAt: Date;
 }
-
 export interface UserType {
   username: string
   hash: string
@@ -24,6 +23,19 @@ export interface UserType {
   profilePicture: string
   friendList: string
   pendingFriendRequest: string
+}
+export interface SendMessageType {
+  toUsername: string,
+  message: string
+}
+
+export type FriendLists = FriendList[]
+
+export interface FriendListBar extends FriendList {
+  lastMessage: string,
+  timeSent: Date | null,
+  name: string,
+  notifications: number
 }
 
 export interface ChatMessage {

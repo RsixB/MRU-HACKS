@@ -21,10 +21,8 @@ export const createApp = () => __awaiter(void 0, void 0, void 0, function* () {
         const app = expess();
         app.use(bodyParser.json());
         app.use(cors());
-        //routes
         app.use("/api", authRoutes);
         app.use("/api", generalRoutes);
-        //gotta add ai api route
         return app;
     }
     catch (e) {
