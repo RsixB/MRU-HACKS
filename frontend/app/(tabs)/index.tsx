@@ -1,12 +1,18 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
-export default function index() {
+export default function Home() {
   return (
-    <View>
-      <Text>index</Text>
+    <View style={styles.container}>
+      <Text>Home</Text>
     </View>
   )
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
+})
