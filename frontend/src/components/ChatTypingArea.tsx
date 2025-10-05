@@ -1,52 +1,78 @@
-import React from "react";
-import { View, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import { View, TextInput, Pressable, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-
-const ChatTypingArea = () => {
-  return (
-    <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        placeholder="Type a message..."
-        placeholderTextColor="#adb5bd"
-      />
-      <TouchableOpacity style={styles.sendButton} activeOpacity={0.7}>
-        <Ionicons name="send" size={22} color="#fff" />
-      </TouchableOpacity>
-    </View>
-  );
+import { useState } from "react";
+import { useChatStore } from "../store/chat-store";
+type ChatTypingAreaProps = {
+  toUsername: string
 };
 
-export default ChatTypingArea;
+export function ChatTypingArea({ toUsername }: ChatTypingAreaProps) {
+  const [text, setText] = useState(""); 
+  const {sendMessage} = useChatStore()
+  const handleSend = () => {
+    if (!text.trim()) return;
+    sendMessage(toUsername, text.trim())
+    setText("");
+  };
+
+  return (
+    <View style={styles.container}>
+      {/* Plus Icon */}
+      <Pressable style={styles.iconButton}>
+        <Ionicons name="add" size={24} color="white" />
+      </Pressable>
+
+      {/* Input */}
+      <TextInput
+        value={text}
+        onChangeText={setText}
+        placeholder="Message..."
+        placeholderTextColor="#888"
+        style={styles.input}
+        multiline
+      />
+
+      {/* Send Button (only visible if text is typed) */}
+      {text.trim().length > 0 && (
+        <Pressable style={styles.sendButton} onPress={handleSend}>
+          <Ionicons name="send" size={20} color="white" />
+        </Pressable>
+      )}
+    </View>
+  );
+}
 
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    backgroundColor: "#fff",
+    alignItems: "flex-end",
+    padding: 8,
     borderTopWidth: 1,
-    borderTopColor: "#e9ecef",
+    borderTopColor: "rgb(15,15,15)",
+    backgroundColor: "rgb(15,15,15)",
+  },
+  iconButton: {
+    padding: 6,
+    marginRight: 4,
+    justifyContent: "center",
+    alignItems: "center",
   },
   input: {
     flex: 1,
-    backgroundColor: "#f1f3f5",
-    borderRadius: 25,
-    paddingHorizontal: 16,
-    paddingVertical: 10,
+    maxHeight: 100,
+    borderRadius: 20,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    backgroundColor: "rgb(40,40,40)",
     fontSize: 16,
-    color: "#212529",
+    color: "white",
   },
   sendButton: {
-    backgroundColor: "#007bff",
-    borderRadius: 25,
-    padding: 10,
     marginLeft: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
+    backgroundColor: "rgb(92, 189, 109)",
+    borderRadius: 20,
+    padding: 10,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

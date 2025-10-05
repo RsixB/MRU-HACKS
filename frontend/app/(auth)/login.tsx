@@ -13,8 +13,7 @@ export default function LoginScreen() {
 
   useEffect(() => {
     if(!isAuthenticated) return
-    // connectWebSocket()
-    router.replace('/(tabs)/profile')
+    router.replace('/(tabs)')
   }, [isAuthenticated])
   
 

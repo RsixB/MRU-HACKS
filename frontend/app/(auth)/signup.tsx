@@ -14,7 +14,8 @@ export default function SignupScreen() {
   
   useEffect(() => {
     if(!isAuthenticated) return
-    router.replace('/(tabs)/profile')
+    // connectWebSocket()
+    router.replace('/(tabs)')
   }, [isAuthenticated])
 
   const submitForm = async() => {

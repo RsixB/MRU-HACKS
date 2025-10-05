@@ -1,35 +1,51 @@
-import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { StyleSheet, Text, View } from 'react-native'
+import React from 'react'
+import { Pressable } from 'react-native'
+import { Ionicons } from '@expo/vector-icons'
 
-const ProfileHeader = () => {
+interface ProfileHeaderProps {
+  onBack: () => void
+}
+
+export default function ProfileHeader({onBack}: ProfileHeaderProps) {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Profile Header</Text>
-    </View>
-  );
-};
+      <Pressable onPress={onBack} style={styles.backButton}>
+        <Ionicons name="chevron-back" size={24} color="white" />
+      </Pressable> 
+      
+      <Text style={styles.title}>
+        Contact info
+      </Text>    
 
-export default ProfileHeader;
+      {/* Spacer so title stays centered even with only one button */}
+      <View style={styles.rightSpacer} />
+    </View>
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
-    width: "100%",
-    backgroundColor: "#fff",
-    paddingVertical: 20,
-    paddingHorizontal: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "#e9ecef",
+    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 3,
-    elevation: 2,
+    justifyContent: "space-between",
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgb(10,10,10)',
+    backgroundColor: 'rgb(10,10,10)',
+  },
+  backButton: {
+    padding: 6,
   },
   title: {
-    fontSize: 20,
+    flex: 1,
+    textAlign: "center",
+    color: "white",
+    fontSize: 18,
     fontWeight: "600",
-    color: "#212529",
   },
-});
+  rightSpacer: {
+    width: 24 + 12, // same width as back button area (icon + padding)
+  },
+})

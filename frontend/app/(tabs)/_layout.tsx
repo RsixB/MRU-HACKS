@@ -1,23 +1,22 @@
 import { Tabs } from "expo-router";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-
+import { useActiveStore } from "@/src/store/active-store";
+import { useChatStore } from "@/src/store/chat-store";
 import { useEffect } from "react";
 import { useProfileStore } from "@/src/store/profile-store";
 
-import { useChatStore } from "@/src/store/chat-store";
-
 export default function TabsLayout() {
   const { getFriendRequests, searchNotifications } = useProfileStore()
-  const { getChatMessages, chatsNotifications,chatMessages } = useChatStore()
-  
+  const { getChatMessages, chatsNotifications, getFriends } = useChatStore()
+  const { inChat, connectWebSocket } = useActiveStore();
 
   useEffect(() => {
     getFriendRequests()
+    getChatMessages()
+    getFriends()
+    connectWebSocket()
   }, [])
 
-  useEffect(() => {
-    getChatMessages
-  },[])
   return (
     <Tabs
     screenOptions={{
@@ -27,14 +26,16 @@ export default function TabsLayout() {
     }}
       >
       <Tabs.Screen
-        name="index"
+        name="personalchat"
         options={{
-          tabBarLabel: "Home",
+          headerShown: false,
+          tabBarLabel: "Create",
           tabBarIcon: ({ color }) => (
-            <FontAwesome name="home" size={24} color={color} />
+            <FontAwesome name="plus-square-o" size={24} color={color} />
           ),
         }}
       />
+
       <Tabs.Screen
         name="explore"
         options={{
@@ -50,9 +51,9 @@ export default function TabsLayout() {
         name="chats"
         options={{
           headerTintColor: "white",
-          headerShown: true,
+          headerShown: !inChat,
           tabBarStyle: {
-            display: "flex",
+            display: inChat ? "none" : "flex",
             backgroundColor: "rgb(16,16,16)"
           },
           headerStyle: {
@@ -67,9 +68,8 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="profile"
+        name="index"
         options={{
-          
           headerShown: false,
           tabBarLabel: "Profile",
           tabBarIcon: ({ color }) => (
