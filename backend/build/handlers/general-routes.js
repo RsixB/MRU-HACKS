@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { MessageModel } from "../database/models/Messages.js";
 import { UserModel } from "../database/models/Users.js";
+import { io, usernamesAndSockets } from "../server.js";
 export const addFriend = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { username } = req.body;
@@ -51,6 +52,12 @@ export const addFriend = (req, res) => __awaiter(void 0, void 0, void 0, functio
         }
         //ADD SOCKETS HERE
         //SOCKET.IO
+        const isOnline = usernamesAndSockets[username];
+        if (isOnline) {
+            io.to(isOnline).emit("friend-request", {
+                newFriend: "YES"
+            });
+        }
         return res.send({
             newFriend: {
                 username,
@@ -191,6 +198,12 @@ export const sendMessage = (req, res) => __awaiter(void 0, void 0, void 0, funct
         if (!newMessage)
             throw new Error();
         //ADD SOCKET TO SEND MESSAGE
+        const isOnline = usernamesAndSockets[messageToBeSent.toUsername];
+        if (isOnline) {
+            io.to(isOnline).emit("new-message", {
+                from: req.user.username
+            });
+        }
         return res.send({
             sent: true,
             err: false

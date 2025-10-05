@@ -1,35 +1,47 @@
 import http from "node:http";
 import { createApp } from "./createApp.ts";
+import { connectMongo } from "./database/connect-mongo.ts";
 import { Server } from "socket.io"
 const PORT = process.env.PORT || 3000;
+import type { WebSocketStore } from "./types/types.ts";
+//i'll change this to redis later
 
-(async () => {
-  const app = await createApp()
+export let usernamesAndSockets: WebSocketStore = {} ;
 
-  
-  if (!app) return;
-  const server = http.createServer(app);
+const app =  createApp()
 
-  const io = new Server(server, {
-    cors: {
-      origin: "*",
-      methods: ["GET", "POST"]
-    }
-  })
+const server = http.createServer(app);
 
-  io.on("connection", (socket) => {
-    console.log("connected to socket")
+export const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"]
+  }
+})
 
-
-
+io.on("connection", async (socket) => {
+  try{
+    const username = socket.handshake.query.username
+    usernamesAndSockets[`${username}`] = socket.id
     socket.on("disconnect", () => {
-      console.log("user disconnected")
+      delete usernamesAndSockets[`${username}`]
+      console.log("user disconnected from socket")
     })
+    console.log(usernamesAndSockets)
+  } catch (e) {
+
+  }
+});
 
 
-  })
-
-  server.listen(3000, "0.0.0.0", () => {
-    console.log(`yea PORT:${PORT}`)
-  })
+(async() => {
+ try {
+    const connected = await connectMongo()
+    if (!connected) throw new Error()
+    server.listen(3000, "0.0.0.0", () => {
+      console.log(`yea PORT:${PORT}`)
+    });      
+ } catch(e) {
+  console.error("server error")
+ }  
 })()

@@ -9,6 +9,10 @@ export interface FriendList {
   username: string
 }
 
+export interface WebSocketStore {
+  [key: string]: string
+}
+
 export interface MessageType {
   fromID: string
   toID: string

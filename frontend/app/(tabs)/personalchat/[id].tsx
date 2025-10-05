@@ -8,7 +8,6 @@ import {
   Image,
   ScrollView,
 } from "react-native";
-import EXAMPLE_IMAGE from "../../../assets/images/TEXTS_EXAMPLE.jpg"
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter, useLocalSearchParams } from "expo-router";

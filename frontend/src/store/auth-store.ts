@@ -2,8 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import { serverAPI } from '../utils/axiosInstance'
-
-
+import { useActiveStore } from './active-store'
 interface AuthState {
   token: string
   isAuthenticated: boolean
@@ -13,7 +12,7 @@ interface AuthState {
   signUp: (username: string, email: string, password: string) => void
   login: (email: string, password: string) => void
   logout: () => void,
-  uploadProfilePicture: (pfp: string) => void
+  uploadProfilePicture: (pfp: string) => void,
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -23,7 +22,7 @@ export const useAuthStore = create<AuthState>()(
       token: '',
       isAuthenticated: false,
       username: "",
-
+      webSocket: null,
       verifyUsername: async (username) => {
         try {
           const res = await serverAPI.post("/verify-username", {

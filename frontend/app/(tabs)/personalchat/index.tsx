@@ -4,17 +4,15 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import DEFAULT_PROFILE from "../../../assets/images/DEFAULT_PROFILE_PICTURE.jpg"
 import { useRouter } from "expo-router";
+import { useProfileStore } from "@/src/store/profile-store";
 interface CreateChatBar {
   name: string;
   profilePicture: string;
 }
 
 export default function CreateChatPage() {
-  const [chats, setChats] = useState<CreateChatBar[]>([
-    { name: "Alice", profilePicture: "" },
-    { name: "Bob", profilePicture: "https://randomuser.me/api/portraits/men/1.jpg" },
-    { name: "Charlie", profilePicture: "" },
-  ]);
+  const { setChatsCreated, chatsCreated} = useProfileStore()
+  const [chats, setChats] = useState<CreateChatBar[]>([]);
   const router = useRouter()
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [newChatName, setNewChatName] = useState("");
@@ -41,7 +39,9 @@ export default function CreateChatPage() {
         {/* Header */}
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Chats</Text>
-          <TouchableOpacity onPress={handleAddChat} style={styles.addButton}>
+          <TouchableOpacity onPress={handleAddChat} style={styles.addButton} onPressIn={() => {
+            setChatsCreated(chatsCreated + 1)
+          }}>
             <Ionicons name="add-circle-outline" size={28} color="white" />
           </TouchableOpacity>
         </View>

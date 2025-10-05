@@ -2,8 +2,7 @@ import { MessageModel } from "../database/models/Messages.ts";
 import { UserModel } from "../database/models/Users.ts";
 import type { Request, Response, NextFunction} from "express-serve-static-core";
 import type { FriendLists, SendMessageType, FriendListBar, ChatMessage, FriendList } from "../types/types.ts";
-import { findPackageJSON } from "node:module";
-
+import { io, usernamesAndSockets } from "../server.ts";
 
 export const addFriend = async (req: Request, res: Response) => {
   try {
@@ -49,6 +48,14 @@ export const addFriend = async (req: Request, res: Response) => {
 
     //ADD SOCKETS HERE
     //SOCKET.IO
+    const isOnline = usernamesAndSockets[username]
+  
+    if(isOnline){
+      io.to(isOnline).emit("friend-request", {
+        newFriend: "YES"
+      })
+    }
+  
     return res.send({
       newFriend: {
       username,
@@ -174,7 +181,6 @@ export const findUserProfile = async (req: Request, res: Response) => {
 export const sendMessage = async (req: Request, res: Response) => {
 
   try {
-
     const messageToBeSent = req.body.content as SendMessageType | undefined
     if(!req.user || !messageToBeSent) throw new Error();
     const findId = await UserModel.findOne({
@@ -192,6 +198,15 @@ export const sendMessage = async (req: Request, res: Response) => {
 
 
     //ADD SOCKET TO SEND MESSAGE
+
+    const isOnline = usernamesAndSockets[messageToBeSent.toUsername]
+  
+    if(isOnline){
+      io.to(isOnline).emit("new-message", {
+        from: req.user.username
+      })
+    }
+
     return res.send({
       sent: true,
       err: false
