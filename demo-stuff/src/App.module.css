@@ -1,0 +1,31 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* full screen height */
+  background: #f9f9f9; /* optional, just for contrast */
+  cursor: pointer; /* indicate clickable */
+  user-select: none; /* prevent text highlighting */
+  font-size: 3rem;
+  font-weight: bold;
+  font-family: sans-serif;
+  position: relative;
+}
+
+.word {
+  transition: opacity 1s ease;
+}
+
+.hidden {
+  opacity: 0;
+}
+
+.final {
+  position: absolute;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+.finalShow {
+  opacity: 1;
+}
